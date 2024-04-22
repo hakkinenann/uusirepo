@@ -10,9 +10,10 @@ class ProjectReader:
     def get_project(self):
         # tiedoston merkkijonomuotoinen sisältö
         content = request.urlopen(self._url).read().decode("utf-8")
-        print(content)
         parsed_toml = toml.loads(content)
-        print(parsed_toml)
-
+        tietorakenteen_eka_kerros = parsed_toml["tool"]
+        tietorakenteen_toka_kerros = tietorakenteen_eka_kerros["poetry"]
+        tietorakenteen_kolmas_kerros = tietorakenteen_toka_kerros["group"]
+        tietorakenteen_neljas_kerros = tietorakenteen_kolmas_kerros["dev"]
         # deserialisoi TOML-formaatissa oleva merkkijono ja muodosta Project-olio sen tietojen perusteella
-        return Project("Test name", "Test description", [], [])
+        return Project(tietorakenteen_toka_kerros["name"], tietorakenteen_toka_kerros["description"], tietorakenteen_toka_kerros["dependencies"], tietorakenteen_neljas_kerros["dependencies"])
